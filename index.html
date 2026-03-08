@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wer wird Millionär</title>
+  <style>
+    :root {
+      --bg-1: #09091f;
+      --bg-2: #11113b;
+      --panel: #17174f;
+      --panel-2: #1f1f67;
+      --gold: #f8c33b;
+      --text: #f4f6ff;
+      --muted: #c6c9f6;
+      --ok: #21b44d;
+      --bad: #de3e3e;
+      --pick: #d88f00;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, var(--bg-2), var(--bg-1));
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .game {
+      width: min(1100px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 290px;
+      gap: 16px;
+    }
+
+    .main {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .question {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      min-height: 120px;
+      padding: 20px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .answer-btn,
+    .helper-btn,
+    .restart-btn {
+      border: 2px solid var(--gold);
+      color: var(--text);
+      background: linear-gradient(180deg, #26358d, #1e2a73);
+      border-radius: 28px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, filter .15s ease;
+    }
+
+    .answer-btn:hover,
+    .helper-btn:hover,
+    .restart-btn:hover {
+      filter: brightness(1.12);
+    }
+
+    .answer-btn:active,
+    .helper-btn:active,
+    .restart-btn:active {
+      transform: translateY(1px);
+    }
+
+    .answer-btn.selected {
+      background: linear-gradient(180deg, #f0a300, #cb8700);
+      color: #151515;
+    }
+
+    .answer-btn.correct {
+      background: linear-gradient(180deg, #3acb6c, #1f9d48);
+    }
+
+    .answer-btn.wrong {
+      background: linear-gradient(180deg, #ef5959, #ca3636);
+    }
+
+    .answer-btn.hidden {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .helpers {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .helper-btn.used {
+      opacity: .45;
+      cursor: not-allowed;
+      filter: grayscale(0.2);
+    }
+
+    .message {
+      min-height: 24px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .side {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .side h2 {
+      margin: 4px 0 10px;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+
+    .prize-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .prize-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(248, 195, 59, 0.45);
+      border-radius: 8px;
+      padding: 7px 8px;
+      font-size: .95rem;
+      background: rgba(19, 23, 73, 0.75);
+    }
+
+    .prize-item.current {
+      background: linear-gradient(180deg, #f0a300, #cb8700);
+      color: #111;
+      font-weight: 800;
+    }
+
+    .prize-item.safe {
+      border-color: #6df28d;
+    }
+
+    @media (max-width: 930px) {
+      .game {
+        grid-template-columns: 1fr;
+      }
+
+      .answers {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <section class="main">
+      <div class="topbar">
+        <div class="status" id="status">Lade Fragen...</div>
+        <button id="restartBtn" class="restart-btn" type="button">Neustart</button>
+      </div>
+
+      <div class="question" id="questionText">Bitte warten...</div>
+
+      <div class="answers" id="answers"></div>
+
+      <div class="controls">
+        <div class="helpers">
+          <button id="helper5050" class="helper-btn" type="button">50:50</button>
+          <button id="helperAudience" class="helper-btn" type="button">Publikum</button>
+          <button id="helperPhone" class="helper-btn" type="button">Telefon</button>
+        </div>
+        <div class="message" id="message"></div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <h2>Gewinnstufen</h2>
+      <ol class="prize-list" id="prizeList"></ol>
+    </aside>
+  </div>
+
+  <script>
+    const PRIZES = [
+      "100 €", "200 €", "300 €", "500 €", "1.000 €",
+      "2.000 €", "4.000 €", "8.000 €", "16.000 €", "32.000 €",
+      "64.000 €", "125.000 €", "500.000 €", "750.000 €", "1.000.000 €"
+    ];
+
+    const SAFE_LEVELS = new Set([5, 10, 15]);
+
+    const state = {
+      questions: [],
+      current: 0,
+      selectedQuestions: [],
+      locked: false,
+      gameOver: false,
+      usedHelpers: {
+        fifty: false,
+        audience: false,
+        phone: false,
+      }
+    };
+
+    const statusEl = document.getElementById("status");
+    const questionEl = document.getElementById("questionText");
+    const answersEl = document.getElementById("answers");
+    const messageEl = document.getElementById("message");
+    const prizeListEl = document.getElementById("prizeList");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const helper5050 = document.getElementById("helper5050");
+    const helperAudience = document.getElementById("helperAudience");
+    const helperPhone = document.getElementById("helperPhone");
+
+    function playTone(type) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.0001, now);
+
+      if (type === "question") {
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(500, now);
+        osc.frequency.linearRampToValueAtTime(620, now + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.18, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === "correct") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.linearRampToValueAtTime(990, now + 0.25);
+        gain.gain.exponentialRampToValueAtTime(0.2, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } else if (type === "wrong") {
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.linearRampToValueAtTime(120, now + 0.5);
+        gain.gain.exponentialRampToValueAtTime(0.16, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+        osc.start(now);
+        osc.stop(now + 0.55);
+      }
+
+      setTimeout(() => ctx.close(), 700);
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function drawPrizes() {
+      prizeListEl.innerHTML = "";
+
+      for (let i = PRIZES.length - 1; i >= 0; i--) {
+        const level = i + 1;
+        const li = document.createElement("li");
+        li.className = "prize-item";
+        if (level === state.current + 1) li.classList.add("current");
+        if (SAFE_LEVELS.has(level)) li.classList.add("safe");
+        li.innerHTML = `<span>${level}</span><strong>${PRIZES[i]}</strong>`;
+        prizeListEl.appendChild(li);
+      }
+    }
+
+    function updateHelperButtons() {
+      helper5050.classList.toggle("used", state.usedHelpers.fifty);
+      helperAudience.classList.toggle("used", state.usedHelpers.audience);
+      helperPhone.classList.toggle("used", state.usedHelpers.phone);
+
+      helper5050.disabled = state.usedHelpers.fifty || state.gameOver || state.locked;
+      helperAudience.disabled = state.usedHelpers.audience || state.gameOver || state.locked;
+      helperPhone.disabled = state.usedHelpers.phone || state.gameOver || state.locked;
+    }
+
+    function showQuestion() {
+      if (state.current >= state.selectedQuestions.length) {
+        state.gameOver = true;
+        statusEl.textContent = "Geschafft! Du bist Quiz-Millionär!";
+        questionEl.textContent = "Herzlichen Glückwunsch! Alle Fragen korrekt beantwortet.";
+        answersEl.innerHTML = "";
+        messageEl.textContent = "Endgewinn: 1.000.000 €";
+        drawPrizes();
+        updateHelperButtons();
+        return;
+      }
+
+      const q = state.selectedQuestions[state.current];
+
+      state.locked = false;
+      messageEl.textContent = "";
+      statusEl.textContent = `Frage ${state.current + 1} von ${state.selectedQuestions.length}`;
+      questionEl.textContent = q.frage;
+      answersEl.innerHTML = "";
+
+      q.optionen.forEach((optionText, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "answer-btn";
+        btn.dataset.answer = optionText;
+        btn.textContent = `${String.fromCharCode(65 + idx)}: ${optionText}`;
+        btn.addEventListener("click", () => onAnswerClick(btn, optionText));
+        answersEl.appendChild(btn);
+      });
+
+      drawPrizes();
+      updateHelperButtons();
+      playTone("question");
+    }
+
+    function disableAllAnswers() {
+      const buttons = answersEl.querySelectorAll(".answer-btn");
+      buttons.forEach((b) => (b.disabled = true));
+    }
+
+    function onAnswerClick(button, answer) {
+      if (state.locked || state.gameOver) return;
+      state.locked = true;
+
+      const q = state.selectedQuestions[state.current];
+      const buttons = [...answersEl.querySelectorAll(".answer-btn")];
+      buttons.forEach((b) => b.classList.remove("selected"));
+      button.classList.add("selected");
+
+      setTimeout(() => {
+        const isCorrect = answer === q.richtigeAntwort;
+
+        buttons.forEach((b) => {
+          if (b.dataset.answer === q.richtigeAntwort) {
+            b.classList.add("correct");
+          }
+          if (b === button && !isCorrect) {
+            b.classList.add("wrong");
+          }
+        });
+
+        if (isCorrect) {
+          playTone("correct");
+          const won = PRIZES[state.current];
+          messageEl.textContent = `Richtig! Aktueller Gewinn: ${won}`;
+          state.current += 1;
+          setTimeout(showQuestion, 1300);
+        } else {
+          playTone("wrong");
+          state.gameOver = true;
+          const safeMoney =
+            state.current >= 10 ? "32.000 €" :
+            state.current >= 5 ? "1.000 €" :
+            "0 €";
+          statusEl.textContent = "Spiel vorbei";
+          messageEl.textContent = `Falsch. Richtige Antwort: ${q.richtigeAntwort}. Sicherer Gewinn: ${safeMoney}`;
+          disableAllAnswers();
+          updateHelperButtons();
+        }
+      }, 550);
+    }
+
+    function use5050() {
+      if (state.usedHelpers.fifty || state.locked || state.gameOver) return;
+
+      const q = state.selectedQuestions[state.current];
+      const buttons = [...answersEl.querySelectorAll(".answer-btn")]
+        .filter((btn) => !btn.classList.contains("hidden"));
+
+      const wrongButtons = buttons.filter((btn) => btn.dataset.answer !== q.richtigeAntwort);
+      const remove = shuffle(wrongButtons).slice(0, 2);
+      remove.forEach((btn) => btn.classList.add("hidden"));
+
+      state.usedHelpers.fifty = true;
+      messageEl.textContent = "50:50 eingesetzt.";
+      updateHelperButtons();
+    }
+
+    function useAudience() {
+      if (state.usedHelpers.audience || state.locked || state.gameOver) return;
+
+      const q = state.selectedQuestions[state.current];
+      const options = [...answersEl.querySelectorAll(".answer-btn")]
+        .filter((btn) => !btn.classList.contains("hidden"));
+
+      const letters = "ABCD";
+      let remaining = 100;
+      const result = [];
+
+      options.forEach((btn, i) => {
+        const isCorrect = btn.dataset.answer === q.richtigeAntwort;
+        const max = isCorrect ? 70 : 45;
+        const min = isCorrect ? 35 : 5;
+        const value = i === options.length - 1
+          ? remaining
+          : Math.max(min, Math.min(max, Math.floor(Math.random() * (max - min + 1))));
+        remaining -= value;
+        result.push({
+          label: letters[i],
+          value,
+          text: btn.dataset.answer
+        });
+      });
+
+      if (remaining !== 0 && result.length > 0) {
+        result[0].value += remaining;
+      }
+
+      const pollText = result
+        .map((r) => `${r.label}: ${Math.max(0, r.value)}%`)
+        .join(" | ");
+
+      state.usedHelpers.audience = true;
+      messageEl.textContent = `Publikum sagt: ${pollText}`;
+      updateHelperButtons();
+    }
+
+    function usePhone() {
+      if (state.usedHelpers.phone || state.locked || state.gameOver) return;
+
+      const q = state.selectedQuestions[state.current];
+      const options = [...answersEl.querySelectorAll(".answer-btn")]
+        .filter((btn) => !btn.classList.contains("hidden"));
+
+      const shouldBeRight = Math.random() < 0.75;
+      let tip;
+
+      if (shouldBeRight) {
+        tip = q.richtigeAntwort;
+      } else {
+        const wrong = options
+          .map((b) => b.dataset.answer)
+          .filter((a) => a !== q.richtigeAntwort);
+        tip = wrong[Math.floor(Math.random() * wrong.length)] || q.richtigeAntwort;
+      }
+
+      state.usedHelpers.phone = true;
+      messageEl.textContent = `Telefonjoker: "Ich glaube, es ist: ${tip}"`;
+      updateHelperButtons();
+    }
+
+    function sanitizeAndParseQuiz(text) {
+      const cleaned = text.replace(/,\s*"shwierigkeit"\s*(?=[}\]])/g, "");
+      return JSON.parse(cleaned);
+    }
+
+    async function loadQuiz() {
+      const resp = await fetch("quiz.json");
+      if (!resp.ok) throw new Error("Quiz-Datei konnte nicht geladen werden.");
+
+      const text = await resp.text();
+      const data = sanitizeAndParseQuiz(text);
+
+      const list = Array.isArray(data) ? data[0]?.test : data?.test;
+      if (!Array.isArray(list) || !list.length) {
+        throw new Error("Keine gültigen Fragen gefunden.");
+      }
+
+      state.questions = list.filter(
+        (q) => q.frage && Array.isArray(q.optionen) && q.optionen.length === 4 && q.richtigeAntwort
+      );
+
+      if (!state.questions.length) {
+        throw new Error("Die Fragen enthalten kein gültiges Format.");
+      }
+    }
+
+    function restartGame() {
+      state.current = 0;
+      state.gameOver = false;
+      state.locked = false;
+      state.usedHelpers = { fifty: false, audience: false, phone: false };
+      state.selectedQuestions = shuffle(state.questions).slice(0, 15);
+      showQuestion();
+    }
+
+    async function init() {
+      try {
+        await loadQuiz();
+        restartGame();
+      } catch (err) {
+        statusEl.textContent = "Fehler beim Laden";
+        questionEl.textContent = "Die Quizdaten konnten nicht geladen werden.";
+        messageEl.textContent = err.message;
+      }
+    }
+
+    helper5050.addEventListener("click", use5050);
+    helperAudience.addEventListener("click", useAudience);
+    helperPhone.addEventListener("click", usePhone);
+    restartBtn.addEventListener("click", restartGame);
+
+    init();
+  </script>
+</body>
+</html>

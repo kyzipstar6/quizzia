@@ -1,0 +1,400 @@
+[{
+  "test": [
+    {
+      "frage": "Zu welchem Reich gehört Rafatazmia chitrakootensis?",
+      "optionen": ["Bacteria", "Animalia", "Eukaryota", "Plantae"],
+      "richtigeAntwort": "Eukaryota",
+      "schwierigkeit": "leicht"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Rafatazmia chitrakootensis gefunden?",
+      "optionen": [
+        "Vindyha-Gebirge in Zentralindien",
+        "Mongolei",
+        "Brasilien",
+        "Kanada"
+      ],
+      "richtigeAntwort": "Vindyha-Gebirge in Zentralindien",
+      "schwierigkeit": "schwer"
+    },
+    {
+      "frage": "Zu welchem Reich gehört Cyclomedusa?",
+      "optionen": ["Animalia", "Plantae", "Fungi", "Bacteria"],
+      "richtigeAntwort": "Animalia",
+      "schwierigkeit": "leicht"
+    },
+    {
+      "frage": "Wie groß konnte Cyclomedusa ungefähr werden?",
+      "optionen": [
+        "Bis zu 35 mm",
+        "Bis zu 2 m",
+        "Bis zu 10 cm",
+        "Bis zu 50 cm"
+      ],
+      "richtigeAntwort": "Bis zu 35 mm",
+      "schwierigkeit": "mittel"
+    },
+    {
+      "frage": "Zu welchem Reich gehört Kymbrella?",
+      "optionen": ["Animalia", "Plantae", "Fungi", "Protista"],
+      "richtigeAntwort": "Animalia"
+    },
+    {
+      "frage": "In welcher Region wurden Fossilien von Kymbrella gefunden?",
+      "optionen": [
+        "Weißes Meer in Russland",
+        "Sahara",
+        "Antarktis",
+        "Australien"
+      ],
+      "richtigeAntwort": "Weißes Meer in Russland",
+      "schwierigkeit": "schwer"
+    },
+    {
+      "frage": "Zu welcher Klasse gehört Mustela aistoodonnivalis?",
+      "optionen": ["Mammalia", "Reptilia", "Aves", "Amphibia"],
+      "richtigeAntwort": "Mammalia",
+      "schwierigkeit": "leicht"
+    },
+    {
+      "frage": "Zu welcher Familie gehört Mustela aistoodonnivalis?",
+      "optionen": ["Mustelidae", "Felidae", "Canidae", "Ursidae"],
+      "richtigeAntwort": "Mustelidae",
+      "schwierigkeit": "leicht"
+    },
+    {
+      "frage": "In welchen Regionen lebt Mustela aistoodonnivalis?",
+      "optionen": [
+        "Shaanxi und Sichuan in China",
+        "Brasilien",
+        "Europa",
+        "Australien"
+      ],
+      "richtigeAntwort": "Shaanxi und Sichuan in China",
+      "schwierigkeit": "mittel"
+    },
+    {
+      "frage": "Zu welcher Klasse gehört Haplophrentis?",
+      "optionen": ["Hyolitha", "Mammalia", "Reptilia", "Aves"],
+      "richtigeAntwort": "Hyolitha",
+      "schwierigkeit": "leicht"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Haplophrentis gefunden?",
+      "optionen": [
+        "Spence Shale (USA)",
+        "Sahara",
+        "Sibirien",
+        "Japan"
+      ],
+      "richtigeAntwort": "Spence Shale (USA)"
+    },
+    {
+      "frage": "Zu welchem Stamm gehört Aegirocassis?",
+      "optionen": ["Arthropoda", "Chordata", "Mollusca", "Annelida"],
+      "richtigeAntwort": "Arthropoda",
+        "schwierigkeit": "mittel"
+    },
+    {
+      "frage": "Wie lang konnte Aegirocassis werden?",
+      "optionen": [
+        "Über 2 Meter",
+        "10 cm",
+        "50 cm",
+        "20 Meter"
+      ],
+      "richtigeAntwort": "Über 2 Meter"
+    },
+    {
+      "frage": "Zu welchem Stamm gehört Onychophora?",
+      "optionen": ["Onychophora", "Chordata", "Arthropoda", "Mollusca"],
+      "richtigeAntwort": "Onychophora"
+    },
+    {
+      "frage": "Herrerasaurus gehört zu welcher Gruppe?",
+      "optionen": ["Dinosauria", "Mammalia", "Aves", "Amphibia"],
+      "richtigeAntwort": "Dinosauria"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Herrerasaurus gefunden?",
+      "optionen": [
+        "Ischigualasto Formation (Argentinien)",
+        "Kanada",
+        "China",
+        "Ägypten"
+      ],
+      "richtigeAntwort": "Ischigualasto Formation (Argentinien)"
+    },
+    {
+      "frage": "Zu welcher Dinosauriergruppe gehört Abrictosaurus?",
+      "optionen": ["Ornithischia", "Saurischia", "Theropoda", "Sauropoda"],
+      "richtigeAntwort": "Ornithischia"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Abrictosaurus gefunden?",
+      "optionen": [
+        "Südafrika und Lesotho",
+        "Kanada",
+        "China",
+        "Brasilien"
+      ],
+      "richtigeAntwort": "Südafrika und Lesotho"
+    },
+    {
+      "frage": "Carcharhinus amblyrhynchos ist besser bekannt als:",
+      "optionen": [
+        "Grauer Riffhai",
+        "Weißer Hai",
+        "Hammerhai",
+        "Tigerhai"
+      ],
+      "richtigeAntwort": "Grauer Riffhai"
+    },
+    {
+      "frage": "In welchen Ozeanen lebt Carcharhinus amblyrhynchos?",
+      "optionen": [
+        "Indischer und Pazifischer Ozean",
+        "Atlantischer Ozean",
+        "Arktischer Ozean",
+        "Südlicher Ozean"
+      ],
+      "richtigeAntwort": "Indischer und Pazifischer Ozean"
+    },
+    {
+      "frage": "Caseosaurus lebte in welcher Zeit?",
+      "optionen": ["Trias", "Jura", "Kreide", "Perm"],
+      "richtigeAntwort": "Trias"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Caseosaurus gefunden?",
+      "optionen": ["Texas", "China", "Deutschland", "Australien"],
+      "richtigeAntwort": "Texas"
+    },
+    {
+      "frage": "Staurikosaurus wurde in welchem Land entdeckt?",
+      "optionen": ["Brasilien", "USA", "Kanada", "Indien"],
+      "richtigeAntwort": "Brasilien"
+    },
+    {
+      "frage": "Chamaeleo calyptratus gehört zu welcher Tierklasse?",
+      "optionen": ["Reptilia", "Mammalia", "Aves", "Amphibia"],
+      "richtigeAntwort": "Reptilia"
+    },
+    {
+      "frage": "Wo ist Chamaeleo calyptratus heimisch?",
+      "optionen": [
+        "Jemen und Saudi-Arabien",
+        "Kanada",
+        "Australien",
+        "Indien"
+      ],
+      "richtigeAntwort": "Jemen und Saudi-Arabien"
+    },
+    {
+      "frage": "Varanus komodoensis ist besser bekannt als:",
+      "optionen": [
+        "Komodowaran",
+        "Leguan",
+        "Krokodil",
+        "Gecko"
+      ],
+      "richtigeAntwort": "Komodowaran"
+    },
+    {
+      "frage": "Wie lang kann ein Komodowaran werden?",
+      "optionen": [
+        "Bis zu 3 Meter",
+        "50 cm",
+        "10 Meter",
+        "1 Meter"
+      ],
+      "richtigeAntwort": "Bis zu 3 Meter"
+    },
+    {
+      "frage": "Tyrannosaurus rex gehört zu welcher Familie?",
+      "optionen": [
+        "Tyrannosauridae",
+        "Dromaeosauridae",
+        "Stegosauridae",
+        "Ceratopsidae"
+      ],
+      "richtigeAntwort": "Tyrannosauridae"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Tyrannosaurus rex gefunden?",
+      "optionen": [
+        "Hell Creek Formation (USA)",
+        "China",
+        "Australien",
+        "Indien"
+      ],
+      "richtigeAntwort": "Hell Creek Formation (USA)"
+    },
+    {
+      "frage": "Triceratops gehört zu welcher Familie?",
+      "optionen": [
+        "Ceratopsidae",
+        "Hadrosauridae",
+        "Tyrannosauridae",
+        "Stegosauridae"
+      ],
+      "richtigeAntwort": "Ceratopsidae"
+    },
+
+    {
+      "frage": "Stegosaurus lebte hauptsächlich in welcher Periode?",
+      "optionen": ["Jura", "Trias", "Kreide", "Perm"],
+      "richtigeAntwort": "Jura"
+    },
+    {
+      "frage": "Velociraptor lebte in welcher Zeit?",
+      "optionen": ["Kreidezeit", "Trias", "Perm", "Devon"],
+      "richtigeAntwort": "Kreidezeit"
+    },
+    {
+      "frage": "Wo wurden Fossilien von Velociraptor entdeckt?",
+      "optionen": [
+        "Mongolei",
+        "USA",
+        "Argentinien",
+        "Kanada"
+      ],
+      "richtigeAntwort": "Mongolei"
+    },
+    {
+      "frage": "Brachiosaurus konnte ungefähr wie lang werden?",
+      "optionen": [
+        "Bis zu 22 Meter",
+        "5 Meter",
+        "10 Meter",
+        "50 Meter"
+      ],
+      "richtigeAntwort": "Bis zu 22 Meter"
+    },
+    {
+      "frage": "Spinosaurus lebte in welcher geologischen Periode?",
+      "optionen": ["Kreide", "Jura", "Trias", "Perm"],
+      "richtigeAntwort": "Kreide"
+    },
+    {
+      "frage": "Ankylosaurus war hauptsächlich:",
+      "optionen": [
+        "Pflanzenfresser",
+        "Fleischfresser",
+        "Allesfresser",
+        "Insektenfresser"
+      ],
+      "richtigeAntwort": "Pflanzenfresser"
+    },
+    {
+      "frage": "Diplodocus gehörte zu welcher Dinosauriergruppe?",
+      "optionen": [
+        "Sauropoden",
+        "Theropoden",
+        "Ceratopsier",
+        "Stegosaurier"
+      ],
+      "richtigeAntwort": "Sauropoden"
+    },
+    {
+      "frage": "Parasaurolophus gehört zu welcher Familie?",
+      "optionen": [
+        "Hadrosauridae",
+        "Tyrannosauridae",
+        "Stegosauridae",
+        "Ceratopsidae"
+      ],
+      "richtigeAntwort": "Hadrosauridae"
+    },
+    {
+      "frage": "Asillifelis gehört zu welcher Familie?",
+      "optionen": [
+        "Felidae",
+        "Canidae",
+        "Mustelidae",
+        "Ursidae"
+      ],
+      "richtigeAntwort": "Felidae"
+    },
+    {
+      "frage": "Ficus carica ist eine:",
+      "optionen": [
+        "Pflanze",
+        "Bakterie",
+        "Reptil",
+        "Fisch"
+      ],
+      "richtigeAntwort": "Pflanze"
+    },
+    {
+      "frage": "Rothpletzella gehört zu welcher Domäne?",
+      "optionen": [
+        "Bacteria",
+        "Eukaryota",
+        "Archaea",
+        "Plantae"
+      ],
+      "richtigeAntwort": "Bacteria"
+    },
+    {
+      "frage": "Rothpletzella wird klassifiziert als:",
+      "optionen": [
+        "Cyanobakterium",
+        "Reptil",
+        "Säugetier",
+        "Pflanze"
+      ],
+      "richtigeAntwort": "Cyanobakterium"
+    },
+    {
+      "frage": "Puma concolor gehört zu welcher Tierklasse?",
+      "optionen": ["Mammalia", "Reptilia", "Aves", "Amphibia"],
+      "richtigeAntwort": "Mammalia"
+    },
+    {
+      "frage": "Puma concolor gehört zu welcher Familie?",
+      "optionen": ["Felidae", "Canidae", "Ursidae", "Mustelidae"],
+      "richtigeAntwort": "Felidae"
+    },
+    {
+      "frage": "Puma concolor lebt hauptsächlich auf welchem Kontinent?",
+      "optionen": [
+        "Nord-, Mittel- und Südamerika",
+        "Europa",
+        "Afrika",
+        "Australien"
+      ],
+      "richtigeAntwort": "Nord-, Mittel- und Südamerika"
+    },
+    {
+      "frage": "Welcher dieser Dinosaurier ist ein Pflanzenfresser?",
+      "optionen": [
+        "Triceratops",
+        "Tyrannosaurus rex",
+        "Velociraptor",
+        "Herrerasaurus"
+      ],
+      "richtigeAntwort": "Triceratops"
+    },
+    {
+      "frage": "Welcher dieser Dinosaurier ist ein Fleischfresser?",
+      "optionen": [
+        "Tyrannosaurus rex",
+        "Stegosaurus",
+        "Triceratops",
+        "Diplodocus"
+      ],
+      "richtigeAntwort": "Tyrannosaurus rex"
+    },
+    {
+      "frage": "Welche Art ist eine Pflanze?",
+      "optionen": [
+        "Ficus carica",
+        "Herrerasaurus",
+        "Velociraptor",
+        "Cyclomedusa"
+      ],
+      "richtigeAntwort": "Ficus carica"
+    }
+  ]
+}]
