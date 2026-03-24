@@ -1,0 +1,322 @@
+[{
+  "test": [
+    {
+      "question": "\"The Bride!\" was a Film of Director name first broadcasted in cinemas in the year..." ,
+      "options": ["2026", "2025", "2024", "2023"],
+      "rightAnswer": "2026",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Features Frankenstein in the film \"The Bride!\"" ,
+      "options": ["Robert De Niro", "Jack Nicholson", "Christian Bale", "Mackenzie Davis"],
+      "rightAnswer": "Christian Bale",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Who directed \"The Bride!\"" ,
+      "options": ["James Cameron", "Maggie Gyllenhaal", "Jon Landau", "George P. Cosmatos"],
+      "rightAnswer": "Maggie Gyllenhaal",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Features the girlfriend in the film \"The Bride!\"" ,
+      "options": ["Annie Johnson", "Julia Waterford", "Penelope Cruz", "Jessie Buckley"],
+      "rightAnswer": "Jessie Buckley",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Other name that the girlfriend in the film \"The Bride!\" acquires." ,
+      "options": ["Julia", "Penelope", "Ingrid", "Olga"],
+      "rightAnswer": "Penelope",
+      "difficulty": "easy"
+    },
+
+  
+    {
+      "question": "Who plays Neo in \"The Matrix\"?",
+      "options": ["Keanu Reeves", "Brad Pitt", "Tom Cruise", "Johnny Depp"],
+      "rightAnswer": "Keanu Reeves",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What pill does Neo take in \"The Matrix\"?",
+      "options": ["Blue", "Red", "Green", "Yellow"],
+      "rightAnswer": "Red",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who is the captain of the Nebuchadnezzar in \"The Matrix\"?",
+      "options": ["Morpheus", "Smith", "Cypher", "Tank"],
+      "rightAnswer": "Morpheus",
+      "difficulty": "middle"
+    },
+    {
+      "question": "What is the Matrix in \"The Matrix\"?",
+      "options": ["A dream", "A simulation", "A planet", "A virus"],
+      "rightAnswer": "A simulation",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Who betrays the crew in \"The Matrix\"?",
+      "options": ["Cypher", "Tank", "Neo", "Dozer"],
+      "rightAnswer": "Cypher",
+      "difficulty": "middle"
+    },
+
+    
+    {
+      "question": "Who directed \"Titanic\"?",
+      "options": ["James Cameron", "Steven Spielberg", "Ridley Scott", "Christopher Nolan"],
+      "rightAnswer": "James Cameron",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who plays Jack Dawson in \"Titanic\"?",
+      "options": ["Leonardo DiCaprio", "Matt Damon", "Brad Pitt", "Tom Hanks"],
+      "rightAnswer": "Leonardo DiCaprio",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is Rose's last name in \"Titanic\"?",
+      "options": ["DeWitt Bukater", "Smith", "Johnson", "Brown"],
+      "rightAnswer": "DeWitt Bukater",
+      "difficulty": "middle"
+    },
+    {
+      "question": "What hits the Titanic in \"Titanic\"?",
+      "options": ["Iceberg", "Ship", "Whale", "Storm"],
+      "rightAnswer": "Iceberg",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Where does Rose throw the necklace in \"Titanic\"?",
+      "options": ["Ocean", "Fire", "River", "Lake"],
+      "rightAnswer": "Ocean",
+      "difficulty": "middle"
+    },
+
+    
+    {
+      "question": "What is Walter White's alias in \"Breaking Bad\"?",
+      "options": ["Heisenberg", "Scarface", "Ghost", "Viper"],
+      "rightAnswer": "Heisenberg",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What drug does Walter produce in \"Breaking Bad\"?",
+      "options": ["Methamphetamine", "Cocaine", "Heroin", "LSD"],
+      "rightAnswer": "Methamphetamine",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who is Walter's partner in \"Breaking Bad\"?",
+      "options": ["Jesse Pinkman", "Saul Goodman", "Hank Schrader", "Gus Fring"],
+      "rightAnswer": "Jesse Pinkman",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is Skyler to Walter in \"Breaking Bad\"?",
+      "options": ["Wife", "Sister", "Friend", "Boss"],
+      "rightAnswer": "Wife",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who is Hank in \"Breaking Bad\"?",
+      "options": ["DEA agent", "Doctor", "Lawyer", "Teacher"],
+      "rightAnswer": "DEA agent",
+      "difficulty": "middle"
+    },
+
+    
+    {
+      "question": "Who is Luke Skywalker's father in \"Star Wars\"?",
+      "options": ["Darth Vader", "Obi-Wan", "Yoda", "Han Solo"],
+      "rightAnswer": "Darth Vader",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the weapon of a Jedi in \"Star Wars\"?",
+      "options": ["Lightsaber", "Blaster", "Sword", "Laser gun"],
+      "rightAnswer": "Lightsaber",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who trained Luke in \"Star Wars\"?",
+      "options": ["Yoda", "Palpatine", "Anakin", "Leia"],
+      "rightAnswer": "Yoda",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the dark side leader called in \"Star Wars\"?",
+      "options": ["Sith", "Jedi", "Clone", "Trooper"],
+      "rightAnswer": "Sith",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Who is Leia to Luke in \"Star Wars\"?",
+      "options": ["Sister", "Wife", "Friend", "Enemy"],
+      "rightAnswer": "Sister",
+      "difficulty": "middle"
+    },
+
+    
+    {
+      "question": "Who sits on the Iron Throne in \"Game of Thrones\"?",
+      "options": ["Various rulers", "Jon Snow", "Arya", "Tyrion"],
+      "rightAnswer": "Various rulers",
+      "difficulty": "middle"
+    },
+    {
+      "question": "What is the Stark family motto in \"Game of Thrones\"?",
+      "options": ["Winter is Coming", "Fire and Blood", "Hear Me Roar", "We Do Not Sow"],
+      "rightAnswer": "Winter is Coming",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who are the White Walkers in \"Game of Thrones\"?",
+      "options": ["Undead beings", "Knights", "Kings", "Dragons"],
+      "rightAnswer": "Undead beings",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Who is the Mother of Dragons in \"Game of Thrones\"?",
+      "options": ["Daenerys", "Cersei", "Sansa", "Arya"],
+      "rightAnswer": "Daenerys",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What creature does Daenerys control in \"Game of Thrones\"?",
+      "options": ["Dragons", "Wolves", "Lions", "Snakes"],
+      "rightAnswer": "Dragons",
+      "difficulty": "easy"
+    },
+
+    
+    {
+      "question": "Who is the head of the Corleone family in \"The Godfather\"?",
+      "options": ["Vito Corleone", "Michael", "Sonny", "Fredo"],
+      "rightAnswer": "Vito Corleone",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who plays Vito Corleone in \"The Godfather\"?",
+      "options": ["Marlon Brando", "Al Pacino", "Robert De Niro", "Joe Pesci"],
+      "rightAnswer": "Marlon Brando",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who becomes the next Don in \"The Godfather\"?",
+      "options": ["Michael", "Sonny", "Tom", "Fredo"],
+      "rightAnswer": "Michael",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the famous quote in \"The Godfather\"?",
+      "options": ["An offer you can't refuse", "Say hello", "Make my day", "Hasta la vista"],
+      "rightAnswer": "An offer you can't refuse",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What business is the family involved in \"The Godfather\"?",
+      "options": ["Organized crime", "Banking", "Farming", "Politics"],
+      "rightAnswer": "Organized crime",
+      "difficulty": "middle"
+    },
+
+    
+    {
+      "question": "Who is Harry Potter's enemy?",
+      "options": ["Voldemort", "Snape", "Draco", "Dumbledore"],
+      "rightAnswer": "Voldemort",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What school does Harry attend in \"Harry Potter\"?",
+      "options": ["Hogwarts", "Durmstrang", "Beauxbatons", "Ilvermorny"],
+      "rightAnswer": "Hogwarts",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who is Harry's best friend in \"Harry Potter\"?",
+      "options": ["Ron", "Draco", "Neville", "Cedric"],
+      "rightAnswer": "Ron",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What house is Harry in \"Harry Potter\"?",
+      "options": ["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"],
+      "rightAnswer": "Gryffindor",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who is the headmaster in \"Harry Potter\"?",
+      "options": ["Dumbledore", "Snape", "McGonagall", "Hagrid"],
+      "rightAnswer": "Dumbledore",
+      "difficulty": "easy"
+    },
+
+  
+    {
+      "question": "What is Eleven's power in \"Stranger Things\"?",
+      "options": ["Telekinesis", "Flight", "Invisibility", "Fire"],
+      "rightAnswer": "Telekinesis",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Where is the show set in \"Stranger Things\"?",
+      "options": ["Hawkins", "Springfield", "Gotham", "Sunnydale"],
+      "rightAnswer": "Hawkins",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the Upside Down in \"Stranger Things\"?",
+      "options": ["Parallel dimension", "Dream", "Planet", "Game"],
+      "rightAnswer": "Parallel dimension",
+      "difficulty": "middle"
+    },
+    {
+      "question": "Who is Will in \"Stranger Things\"?",
+      "options": ["Kid who disappears", "Teacher", "Doctor", "Police"],
+      "rightAnswer": "Kid who disappears",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What creature appears in \"Stranger Things\"?",
+      "options": ["Demogorgon", "Dragon", "Zombie", "Alien"],
+      "rightAnswer": "Demogorgon",
+      "difficulty": "middle"
+    },
+
+  
+    {
+      "question": "Who directed \"Inception\"?",
+      "options": ["Christopher Nolan", "Spielberg", "Tarantino", "Kubrick"],
+      "rightAnswer": "Christopher Nolan",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the main concept in  \"Inception\"?",
+      "options": ["Dream invasion", "Time travel", "Aliens", "War"],
+      "rightAnswer": "Dream invasion",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Who plays Cobb? in \"Inception\"?",
+      "options": ["Leonardo DiCaprio", "Brad Pitt", "Matt Damon", "Tom Hardy"],
+      "rightAnswer": "Leonardo DiCaprio",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is used to check reality in \"Inception\"?",
+      "options": ["Totem", "Phone", "Clock", "Ring"],
+      "rightAnswer": "Totem",
+      "difficulty": "middle"
+    },
+    {
+      "question": "What spins at the end of \"Inception\"?",
+      "options": ["Top", "Coin", "Dice", "Knife"],
+      "rightAnswer": "Top",
+      "difficulty": "middle"
+    }
+  ]
+}]
