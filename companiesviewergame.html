@@ -103,6 +103,29 @@
       font-weight: 700;
     }
 
+    .hud-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .hud-btn {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.84rem;
+    }
+
+    .hud-btn:hover {
+      background: rgba(240, 189, 63, 0.18);
+    }
+
     .company-card {
       position: fixed;
       right: 16px;
@@ -391,6 +414,11 @@
       <div class="meter"><span>Quiz</span><strong id="quizCount">Locked</strong></div>
     </div>
     <p class="prompt" id="promptText">Loading museum...</p>
+    <div class="hud-actions">
+      <button class="hud-btn" id="fullscreenBtn" type="button">Fullscreen</button>
+      <button class="hud-btn" id="musicBtn" type="button">Music on</button>
+      <button class="hud-btn" id="nextTrackBtn" type="button">Next track</button>
+    </div>
   </section>
 
   <article class="company-card" id="companyCard" aria-live="polite"></article>
@@ -464,6 +492,9 @@
     const pickedCount = document.getElementById("pickedCount");
     const deliveredCount = document.getElementById("deliveredCount");
     const quizCount = document.getElementById("quizCount");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const musicBtn = document.getElementById("musicBtn");
+    const nextTrackBtn = document.getElementById("nextTrackBtn");
     const quizOverlay = document.getElementById("quizOverlay");
     const questionText = document.getElementById("questionText");
     const answersEl = document.getElementById("answers");
@@ -483,10 +514,53 @@
       quizIndex: 0,
       quizLocked: false,
       quizFinished: false,
+      audio: null,
+      musicGain: null,
+      musicEnabled: false,
+      currentTrack: -1,
+      musicTimers: [],
       keys: new Set(),
       yaw: 0,
       pitch: 0
     };
+
+    const TRACKS = [
+      {
+        name: "Gallery Pulse",
+        bpm: 92,
+        bass: ["C2", "G2", "A#1", "F2"],
+        lead: ["G3", "C4", "D#4", "G4", "F4", "D#4", "C4", "G3"],
+        pad: ["C3", "D#3", "G3"]
+      },
+      {
+        name: "Velvet Exhibit",
+        bpm: 78,
+        bass: ["A1", "E2", "G2", "D2"],
+        lead: ["E3", "A3", "C4", "E4", "D4", "C4", "A3", "G3"],
+        pad: ["A2", "C3", "E3"]
+      },
+      {
+        name: "Night Curator",
+        bpm: 104,
+        bass: ["D2", "A1", "C2", "G1"],
+        lead: ["F3", "A3", "D4", "E4", "D4", "A3", "C4", "A3"],
+        pad: ["D3", "F3", "A3"]
+      },
+      {
+        name: "Golden Hall",
+        bpm: 86,
+        bass: ["F2", "C2", "D2", "A#1"],
+        lead: ["A3", "C4", "F4", "G4", "F4", "D4", "C4", "A3"],
+        pad: ["F3", "A3", "C4"]
+      },
+      {
+        name: "Quiz Tension",
+        bpm: 96,
+        bass: ["E2", "B1", "D2", "A1"],
+        lead: ["G3", "B3", "E4", "F4", "E4", "B3", "D4", "B3"],
+        pad: ["E3", "G3", "B3"]
+      }
+    ];
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x151821);
@@ -929,6 +1003,131 @@
       return copy;
     }
 
+    function noteToFrequency(note) {
+      const match = /^([A-G]#?)(-?\d)$/.exec(note);
+      if (!match) return 440;
+      const semitones = { C: -9, "C#": -8, D: -7, "D#": -6, E: -5, F: -4, "F#": -3, G: -2, "G#": -1, A: 0, "A#": 1, B: 2 };
+      const [, name, octaveText] = match;
+      const octave = Number(octaveText);
+      const distance = semitones[name] + (octave - 4) * 12;
+      return 440 * Math.pow(2, distance / 12);
+    }
+
+    function ensureAudio() {
+      if (!state.audio) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return null;
+        state.audio = new AudioContext();
+        state.musicGain = state.audio.createGain();
+        state.musicGain.gain.value = 0.9;
+        state.musicGain.connect(state.audio.destination);
+      }
+      if (state.audio.state === "suspended") state.audio.resume();
+      return state.audio;
+    }
+
+    function stopMusic() {
+      state.musicTimers.forEach((id) => window.clearTimeout(id));
+      state.musicTimers = [];
+      if (state.audio && state.musicGain) {
+        const now = state.audio.currentTime;
+        state.musicGain.gain.cancelScheduledValues(now);
+        state.musicGain.gain.setTargetAtTime(0.0001, now, 0.04);
+      }
+    }
+
+    function playNote(ctx, note, start, duration, type, volume) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+      osc.type = type;
+      osc.frequency.setValueAtTime(noteToFrequency(note), start);
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(type === "sine" ? 1200 : 760, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(volume, start + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(state.musicGain || ctx.destination);
+      osc.start(start);
+      osc.stop(start + duration + 0.04);
+    }
+
+    function scheduleTrack(trackIndex) {
+      const ctx = ensureAudio();
+      if (!ctx || !state.musicEnabled) return;
+      stopMusic();
+
+      state.currentTrack = trackIndex;
+      const track = TRACKS[trackIndex];
+      const beat = 60 / track.bpm;
+      const loopLength = beat * 16;
+      const startAt = ctx.currentTime + 0.08;
+      state.musicGain.gain.cancelScheduledValues(ctx.currentTime);
+      state.musicGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      state.musicGain.gain.linearRampToValueAtTime(0.9, ctx.currentTime + 0.4);
+
+      const scheduleLoop = (baseTime) => {
+        if (!state.musicEnabled) return;
+
+        for (let step = 0; step < 16; step++) {
+          const time = baseTime + step * beat;
+          if (step % 4 === 0) {
+            playNote(ctx, track.bass[(step / 4) % track.bass.length], time, beat * 1.8, "triangle", 0.075);
+          }
+          if (step % 2 === 0) {
+            playNote(ctx, track.lead[(step / 2) % track.lead.length], time + beat * 0.1, beat * 0.82, "sine", 0.045);
+          }
+          if (step === 0 || step === 8) {
+            track.pad.forEach((note, idx) => {
+              playNote(ctx, note, time + idx * 0.015, beat * 6.5, "sine", 0.025);
+            });
+          }
+        }
+
+        const timer = window.setTimeout(() => scheduleLoop(baseTime + loopLength), loopLength * 1000 - 140);
+        state.musicTimers.push(timer);
+      };
+
+      scheduleLoop(startAt);
+      musicBtn.textContent = `Music off: ${track.name}`;
+    }
+
+    function startRandomMusic() {
+      const next = Math.floor(Math.random() * TRACKS.length);
+      state.musicEnabled = true;
+      scheduleTrack(next);
+    }
+
+    function toggleMusic() {
+      if (state.musicEnabled) {
+        state.musicEnabled = false;
+        stopMusic();
+        musicBtn.textContent = "Music on";
+        return;
+      }
+      startRandomMusic();
+    }
+
+    function nextTrack() {
+      state.musicEnabled = true;
+      const next = state.currentTrack < 0 ? Math.floor(Math.random() * TRACKS.length) : (state.currentTrack + 1) % TRACKS.length;
+      scheduleTrack(next);
+    }
+
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (error) {
+        promptText.textContent = "Fullscreen is not available in this browser window.";
+      }
+    }
+
     async function loadCompanies() {
       try {
         const response = await fetch("js/companies.json");
@@ -942,6 +1141,9 @@
 
     function bindInput() {
       window.addEventListener("keydown", (event) => {
+        if (!state.musicEnabled && !state.audio && ["w", "a", "s", "d", "e"].includes(event.key.toLowerCase())) {
+          startRandomMusic();
+        }
         const key = event.key.toLowerCase();
         if (["w", "a", "s", "d", "shift"].includes(key)) state.keys.add(key);
         if (key === "e") interact();
@@ -957,6 +1159,15 @@
       canvas.addEventListener("click", () => {
         canvas.focus();
         canvas.requestPointerLock?.();
+        if (!state.musicEnabled && !state.audio) startRandomMusic();
+      });
+
+      fullscreenBtn.addEventListener("click", toggleFullscreen);
+      musicBtn.addEventListener("click", toggleMusic);
+      nextTrackBtn.addEventListener("click", nextTrack);
+
+      document.addEventListener("fullscreenchange", () => {
+        fullscreenBtn.textContent = document.fullscreenElement ? "Exit fullscreen" : "Fullscreen";
       });
 
       window.addEventListener("mousemove", (event) => {
