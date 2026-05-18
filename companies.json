@@ -1,0 +1,81 @@
+[
+    {
+        "name": "Ubisoft",
+        "description": "Ubisoft is a leading video game company known for popular franchises such as Assassin's Creed, Far Cry, and Rainbow Six. The company focuses on creating immersive gaming experiences across various platforms.",
+        "website": "https://www.ubisoft.com/",
+        "revenue": "5.5 billion USD (2023)",
+        "employees": 18000,
+            "headquarters": "Montreuil, France",
+            "income": "1.2 billion USD (2023)",
+            "share_price": "45.00 USD (2023)"
+        },{
+        "name": "Electronic Arts (EA)",
+        "description": "Electronic Arts is a major video game publisher known for titles like FIFA, Madden NFL, and The Sims. EA focuses on delivering engaging gaming experiences across multiple platforms, including consoles, PC, and mobile.",
+        "website": "https://www.ea.com/",
+        "revenue": "6.0 billion USD (2023)",
+        "employees": 10000,
+        "headquarters": "Redwood City, California, USA",
+        "income": "1.5 billion USD (2023)",
+        "share_price": "120.00 USD (2023)"
+        },
+    {
+        "name": "Activision Blizzard",
+        "description": "Activision Blizzard is a leading video game company known for popular franchises such as Call of Duty, World of Warcraft, and Overwatch. The company focuses on creating engaging gaming experiences across various platforms.",
+        "website": "https://www.activisionblizzard.com/",
+        "revenue": "7.0 billion USD (2023)",
+        "employees": 9000,
+        "headquarters": "Santa Monica, California, USA",
+        "income": "1.8 billion USD (2023)",
+        "share_price": "85.00 USD (2023)"
+    },
+    {
+        "name": "Nintendo",
+        "description": "Nintendo is a renowned video game company known for iconic franchises such as Mario, The Legend of Zelda, and Pokémon. The company focuses on creating innovative gaming experiences across its own platforms, including the Nintendo Switch.",
+        "website": "https://www.nintendo.com/",
+        "revenue": "12.0 billion USD (2023)",
+        "employees": 6000,
+        "headquarters": "Kyoto, Japan",
+        "income": "2.5 billion USD (2023)",
+        "share_price": "75.00 USD (2023)"
+    },
+        {
+            "name": "Sony Interactive Entertainment",
+            "description": "Sony Interactive Entertainment is a division of Sony Corporation responsible for the PlayStation brand. The company focuses on creating immersive gaming experiences through its consoles and exclusive game titles.",
+            "website": "https://www.playstation.com/",
+            "revenue": "15.0 billion USD (2023)",
+            "employees": 8000,
+            "headquarters": "San Mateo, California, USA",
+            "income": "3.0 billion USD (2023)",
+            "share_price": "100.00 USD (2023)"
+        },
+        {
+                "name": "Microsoft Xbox",
+                "description": "Microsoft Xbox is a division of Microsoft Corporation responsible for the Xbox gaming brand. The company focuses on delivering high-quality gaming experiences through its consoles, services, and exclusive game titles.",
+                "website": "https://www.xbox.com/",
+                "revenue": "20.0 billion USD (2023)",
+                "employees": 12000,
+                "headquarters": "Redmond, Washington, USA",
+                "income": "4.0 billion USD (2023)",
+                "share_price": "150.00 USD (2023)"
+            },
+            {
+                "name": "Take-Two Interactive",
+                "description": "Take-Two Interactive is a leading video game company known for popular franchises such as Grand Theft Auto, Red Dead Redemption, and NBA 2K. The company focuses on creating immersive gaming experiences across various platforms.",
+                "website": "https://www.take2games.com/",
+                "revenue": "3.5 billion USD (2023)",
+                "employees": 5000,
+                "headquarters": "New York City, New York, USA",
+                "income": "800 million USD (2023)",
+                "share_price": "75.00 USD (2023)"
+            },
+            {
+                "name": "Square Enix",
+                "description": "Square Enix is a renowned video game company known for popular franchises such as Final Fantasy, Dragon Quest, and Kingdom Hearts. The company focuses on creating immersive gaming experiences across various platforms.",
+                "website": "https://www.square-enix.com/",
+                "revenue": "2.0 billion USD (2023)",
+                "employees": 4000,
+                "headquarters": "Tokyo, Japan",
+                "income": "500 million USD (2023)",
+                "share_price": "50.00 USD (2023)"
+            }
+]
