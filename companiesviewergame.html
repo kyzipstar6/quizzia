@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company Museum Game</title>
+  <style>
+    :root {
+      --ink: #f7f3e8;
+      --muted: #c7c1af;
+      --gold: #f0bd3f;
+      --blue: #111a46;
+      --blue-2: #17266b;
+      --green: #2bc46b;
+      --red: #df4a4a;
+      --panel: rgba(14, 18, 31, 0.84);
+      --line: rgba(240, 189, 63, 0.52);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #12141d;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #gameCanvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      outline: none;
+    }
+
+    .hud {
+      position: fixed;
+      inset: 16px auto auto 16px;
+      width: min(390px, calc(100vw - 32px));
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      z-index: 5;
+    }
+
+    .hud h1 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0;
+    }
+
+    .objective,
+    .prompt,
+    .company-card p,
+    .quiz-message {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: 0.92rem;
+    }
+
+    .meters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .meter {
+      min-height: 54px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 6px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .meter span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+
+    .meter strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 1rem;
+    }
+
+    .prompt {
+      margin-top: 12px;
+      min-height: 40px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .company-card {
+      position: fixed;
+      right: 16px;
+      top: 16px;
+      width: min(390px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 5;
+    }
+
+    .company-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .company-card h2 {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 1.3rem;
+    }
+
+    .company-card dl {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 7px 10px;
+      margin: 12px 0 0;
+      font-size: 0.9rem;
+    }
+
+    .company-card dt {
+      color: var(--muted);
+    }
+
+    .company-card dd {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .controls {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 5;
+    }
+
+    .control-key {
+      min-width: 38px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      background: rgba(14, 18, 31, 0.78);
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 0.84rem;
+    }
+
+    .quiz {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: radial-gradient(circle at top, rgba(35, 47, 122, 0.94), rgba(3, 6, 22, 0.96));
+      z-index: 10;
+    }
+
+    .quiz.visible {
+      display: grid;
+    }
+
+    .quiz-shell {
+      width: min(1120px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 16px;
+    }
+
+    .quiz-main,
+    .ladder {
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      background: rgba(8, 13, 45, 0.88);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+    }
+
+    .quiz-main {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .quiz-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-top h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .question {
+      min-height: 122px;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--blue), var(--blue-2));
+      text-align: center;
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 800;
+      line-height: 1.36;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .answer-btn,
+    .action-btn {
+      min-height: 48px;
+      border: 2px solid var(--gold);
+      border-radius: 28px;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, #24398b, #1b286f);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 800;
+      transition: filter 0.15s ease, transform 0.08s ease;
+    }
+
+    .answer-btn:hover,
+    .action-btn:hover {
+      filter: brightness(1.12);
+    }
+
+    .answer-btn:active,
+    .action-btn:active {
+      transform: translateY(1px);
+    }
+
+    .answer-btn.correct {
+      background: linear-gradient(180deg, #31c66c, #168840);
+    }
+
+    .answer-btn.wrong {
+      background: linear-gradient(180deg, #ec6464, #bd2e2e);
+    }
+
+    .answer-btn:disabled,
+    .action-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.78;
+    }
+
+    .quiz-message {
+      min-height: 24px;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .ladder {
+      padding: 12px;
+    }
+
+    .ladder h3 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .ladder ol {
+      display: grid;
+      gap: 6px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .ladder li {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 8px;
+      border: 1px solid rgba(240, 189, 63, 0.42);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .ladder li.current {
+      background: linear-gradient(180deg, #efb633, #c77d12);
+      color: #111;
+      font-weight: 900;
+    }
+
+    .mobile-pad {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display: none;
+      grid-template-columns: repeat(3, 44px);
+      gap: 7px;
+      z-index: 5;
+    }
+
+    .mobile-pad button {
+      width: 44px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      background: rgba(14, 18, 31, 0.8);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .mobile-pad .blank {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 920px) {
+      .company-card {
+        top: auto;
+        right: 12px;
+        bottom: 72px;
+        width: calc(100vw - 24px);
+        max-height: 42vh;
+      }
+
+      .controls {
+        display: none;
+      }
+
+      .mobile-pad {
+        display: grid;
+      }
+
+      .quiz-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .ladder {
+        display: none;
+      }
+
+      .answers {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" tabindex="0"></canvas>
+
+  <section class="hud" aria-label="Game status">
+    <h1>Company Museum Heist</h1>
+    <p class="objective" id="objectiveText">Walk through the museum, inspect every picture, pick it up, and place it on the table.</p>
+    <div class="meters">
+      <div class="meter"><span>Pictures</span><strong id="pickedCount">0/0</strong></div>
+      <div class="meter"><span>On table</span><strong id="deliveredCount">0/0</strong></div>
+      <div class="meter"><span>Quiz</span><strong id="quizCount">Locked</strong></div>
+    </div>
+    <p class="prompt" id="promptText">Loading museum...</p>
+  </section>
+
+  <article class="company-card" id="companyCard" aria-live="polite"></article>
+
+  <div class="controls" aria-hidden="true">
+    <span class="control-key">WASD</span>
+    <span class="control-key">Mouse</span>
+    <span class="control-key">E</span>
+    <span class="control-key">Q</span>
+  </div>
+
+  <div class="mobile-pad" aria-label="Mobile controls">
+    <button class="blank" type="button" tabindex="-1"></button>
+    <button data-hold="forward" type="button">W</button>
+    <button class="blank" type="button" tabindex="-1"></button>
+    <button data-hold="left" type="button">A</button>
+    <button data-action="interact" type="button">E</button>
+    <button data-hold="right" type="button">D</button>
+    <button data-action="turnLeft" type="button">L</button>
+    <button data-hold="backward" type="button">S</button>
+    <button data-action="turnRight" type="button">R</button>
+  </div>
+
+  <section class="quiz" id="quizOverlay" aria-label="Millionaire quiz">
+    <div class="quiz-shell">
+      <main class="quiz-main">
+        <div class="quiz-top">
+          <h2>Who Wants to Be a Company Millionaire?</h2>
+          <button class="action-btn" id="returnMuseumBtn" type="button">Return to museum</button>
+        </div>
+        <div class="question" id="questionText">Question</div>
+        <div class="answers" id="answers"></div>
+        <p class="quiz-message" id="quizMessage"></p>
+      </main>
+      <aside class="ladder">
+        <h3>Prize ladder</h3>
+        <ol id="prizeList"></ol>
+      </aside>
+    </div>
+  </section>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.164.1/build/three.module.js"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from "three";
+
+    const FALLBACK_COMPANIES = [
+      { name: "Ubisoft", description: "Ubisoft is a leading video game company known for popular franchises such as Assassin's Creed, Far Cry, and Rainbow Six.", website: "https://www.ubisoft.com/", revenue: "5.5 billion USD (2023)", employees: 18000, headquarters: "Montreuil, France", net_income: "1.2 billion USD (2023)", share_price: "45.00 USD (2023)" },
+      { name: "Electronic Arts (EA)", description: "Electronic Arts is a major video game publisher known for titles like FIFA, Madden NFL, and The Sims.", website: "https://www.ea.com/", revenue: "6.0 billion USD (2023)", employees: 10000, headquarters: "Redwood City, California, USA", net_income: "1.5 billion USD (2023)", share_price: "120.00 USD (2023)" },
+      { name: "Activision Blizzard", description: "Activision Blizzard is known for Call of Duty, World of Warcraft, and Overwatch.", website: "https://www.activisionblizzard.com/", revenue: "7.0 billion USD (2023)", employees: 9000, headquarters: "Santa Monica, California, USA", net_income: "1.8 billion USD (2023)", share_price: "85.00 USD (2023)" },
+      { name: "Rockstar Games", description: "Rockstar Games is known for Grand Theft Auto, Red Dead Redemption, and Max Payne.", website: "https://www.rockstargames.com/", revenue: "4.0 billion USD (2023)", employees: 2000, headquarters: "New York City, New York, USA", net_income: "900 million USD (2023)", share_price: "70.00 USD (2023)" }
+    ];
+
+    const PRIZES = ["100 EUR", "200 EUR", "300 EUR", "500 EUR", "1,000 EUR", "2,000 EUR", "4,000 EUR", "8,000 EUR", "16,000 EUR", "32,000 EUR", "64,000 EUR", "125,000 EUR", "500,000 EUR", "750,000 EUR", "1,000,000 EUR"];
+    const FIELD_LABELS = {
+      headquarters: "Headquarters",
+      revenue: "Revenue",
+      employees: "Employees",
+      net_income: "Net income",
+      share_price: "Share price"
+    };
+
+    const canvas = document.getElementById("gameCanvas");
+    const companyCard = document.getElementById("companyCard");
+    const promptText = document.getElementById("promptText");
+    const pickedCount = document.getElementById("pickedCount");
+    const deliveredCount = document.getElementById("deliveredCount");
+    const quizCount = document.getElementById("quizCount");
+    const quizOverlay = document.getElementById("quizOverlay");
+    const questionText = document.getElementById("questionText");
+    const answersEl = document.getElementById("answers");
+    const quizMessage = document.getElementById("quizMessage");
+    const prizeList = document.getElementById("prizeList");
+    const returnMuseumBtn = document.getElementById("returnMuseumBtn");
+
+    const state = {
+      companies: [],
+      paintings: [],
+      delivered: new Set(),
+      seen: new Set(),
+      carrying: null,
+      nearest: null,
+      nearTable: false,
+      quizQuestions: [],
+      quizIndex: 0,
+      quizLocked: false,
+      quizFinished: false,
+      keys: new Set(),
+      yaw: 0,
+      pitch: 0
+    };
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x151821);
+    scene.fog = new THREE.Fog(0x151821, 12, 35);
+
+    const camera = new THREE.PerspectiveCamera(68, window.innerWidth / window.innerHeight, 0.1, 80);
+    camera.position.set(0, 1.65, 8);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+
+    const tableZone = new THREE.Box3(new THREE.Vector3(-2.7, 0, -1.8), new THREE.Vector3(2.7, 2.5, 1.8));
+    const clock = new THREE.Clock();
+
+    function makeTextTexture(company, index) {
+      const c = document.createElement("canvas");
+      c.width = 1024;
+      c.height = 640;
+      const ctx = c.getContext("2d");
+      const palette = ["#203a5f", "#6b2d35", "#31513a", "#5b4631", "#432f63", "#5d6b2d"];
+
+      ctx.fillStyle = palette[index % palette.length];
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      for (let i = 0; i < 9; i++) {
+        ctx.beginPath();
+        ctx.arc(120 + i * 110, 90 + ((i * 61) % 420), 70, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "#f1c45b";
+      ctx.fillRect(52, 52, c.width - 104, c.height - 104);
+      ctx.fillStyle = "#171a24";
+      ctx.fillRect(82, 82, c.width - 164, c.height - 164);
+      ctx.fillStyle = "#f8f2df";
+      ctx.font = "bold 62px Arial";
+      ctx.textAlign = "center";
+      wrapCanvasText(ctx, company.name, c.width / 2, 220, 790, 72);
+      ctx.font = "34px Arial";
+      ctx.fillStyle = "#d7d0bd";
+      wrapCanvasText(ctx, company.headquarters, c.width / 2, 410, 760, 44);
+
+      const texture = new THREE.CanvasTexture(c);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    }
+
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = String(text).split(" ");
+      let line = "";
+      for (const word of words) {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          ctx.fillText(line, x, y);
+          line = word;
+          y += lineHeight;
+        } else {
+          line = test;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    function addRoom() {
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(24, 24),
+        new THREE.MeshStandardMaterial({ color: 0x6b665b, roughness: 0.75 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      const ceiling = new THREE.Mesh(
+        new THREE.PlaneGeometry(24, 24),
+        new THREE.MeshStandardMaterial({ color: 0x292b32, roughness: 0.85 })
+      );
+      ceiling.position.y = 4.4;
+      ceiling.rotation.x = Math.PI / 2;
+      scene.add(ceiling);
+
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0xd6cfbd, roughness: 0.72 });
+      const walls = [
+        { pos: [0, 2.2, -12], scale: [24, 4.4, 0.24] },
+        { pos: [0, 2.2, 12], scale: [24, 4.4, 0.24] },
+        { pos: [-12, 2.2, 0], scale: [0.24, 4.4, 24] },
+        { pos: [12, 2.2, 0], scale: [0.24, 4.4, 24] }
+      ];
+      walls.forEach((wall) => {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(...wall.scale), wallMat);
+        mesh.position.set(...wall.pos);
+        mesh.receiveShadow = true;
+        scene.add(mesh);
+      });
+
+      const tableTop = new THREE.Mesh(
+        new THREE.BoxGeometry(5.4, 0.28, 2.9),
+        new THREE.MeshStandardMaterial({ color: 0x765233, roughness: 0.55 })
+      );
+      tableTop.position.set(0, 0.94, 0);
+      tableTop.castShadow = true;
+      tableTop.receiveShadow = true;
+      scene.add(tableTop);
+
+      const legMat = new THREE.MeshStandardMaterial({ color: 0x4a3322, roughness: 0.6 });
+      [[-2.35, -1.1], [2.35, -1.1], [-2.35, 1.1], [2.35, 1.1]].forEach(([x, z]) => {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.9, 0.25), legMat);
+        leg.position.set(x, 0.42, z);
+        leg.castShadow = true;
+        scene.add(leg);
+      });
+
+      const label = makeLabelTexture("Delivery table");
+      const labelMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 0.42), new THREE.MeshBasicMaterial({ map: label, transparent: true }));
+      labelMesh.position.set(0, 1.18, 1.49);
+      labelMesh.rotation.x = -Math.PI / 2;
+      scene.add(labelMesh);
+    }
+
+    function makeLabelTexture(text) {
+      const c = document.createElement("canvas");
+      c.width = 512;
+      c.height = 128;
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "rgba(18, 20, 29, 0.92)";
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.strokeStyle = "#f0bd3f";
+      ctx.lineWidth = 8;
+      ctx.strokeRect(8, 8, c.width - 16, c.height - 16);
+      ctx.fillStyle = "#f7f3e8";
+      ctx.font = "bold 42px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, c.width / 2, c.height / 2);
+      const texture = new THREE.CanvasTexture(c);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    }
+
+    function addLights() {
+      scene.add(new THREE.HemisphereLight(0xfff7e5, 0x222636, 0.95));
+      const main = new THREE.DirectionalLight(0xfff1cc, 1.35);
+      main.position.set(5, 8, 5);
+      main.castShadow = true;
+      main.shadow.mapSize.set(2048, 2048);
+      scene.add(main);
+
+      [[-6, 4.15, -5], [0, 4.15, -5], [6, 4.15, -5], [-6, 4.15, 5], [0, 4.15, 5], [6, 4.15, 5]].forEach((pos) => {
+        const spot = new THREE.PointLight(0xffe4a0, 0.82, 8);
+        spot.position.set(...pos);
+        scene.add(spot);
+      });
+    }
+
+    function addPaintings(companies) {
+      const positions = [
+        [-7.8, 2.15, -11.82, 0],
+        [0, 2.15, -11.82, 0],
+        [7.8, 2.15, -11.82, 0],
+        [-11.82, 2.15, -6.8, Math.PI / 2],
+        [-11.82, 2.15, 0, Math.PI / 2],
+        [-11.82, 2.15, 6.8, Math.PI / 2],
+        [11.82, 2.15, -6.8, -Math.PI / 2],
+        [11.82, 2.15, 0, -Math.PI / 2],
+        [11.82, 2.15, 6.8, -Math.PI / 2]
+      ];
+
+      companies.forEach((company, index) => {
+        const [x, y, z, ry] = positions[index % positions.length];
+        const group = new THREE.Group();
+        group.position.set(x, y, z);
+        group.rotation.y = ry;
+        group.userData = { company, index, delivered: false, picked: false };
+
+        const frame = new THREE.Mesh(
+          new THREE.BoxGeometry(2.42, 1.68, 0.16),
+          new THREE.MeshStandardMaterial({ color: 0x7c5a2d, roughness: 0.5, metalness: 0.05 })
+        );
+        frame.castShadow = true;
+        group.add(frame);
+
+        const art = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.08, 1.34),
+          new THREE.MeshStandardMaterial({ map: makeTextTexture(company, index), roughness: 0.48 })
+        );
+        art.position.z = 0.09;
+        group.add(art);
+
+        const plaque = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.75, 0.25),
+          new THREE.MeshBasicMaterial({ map: makeLabelTexture(company.name), transparent: true })
+        );
+        plaque.position.set(0, -1.02, 0.1);
+        group.add(plaque);
+
+        scene.add(group);
+        state.paintings.push(group);
+      });
+    }
+
+    function updateCameraRotation() {
+      camera.rotation.order = "YXZ";
+      camera.rotation.y = state.yaw;
+      camera.rotation.x = state.pitch;
+    }
+
+    function movePlayer(delta) {
+      const speed = state.keys.has("shift") ? 6 : 3.8;
+      const forward = new THREE.Vector3(Math.sin(state.yaw), 0, Math.cos(state.yaw) * -1);
+      const right = new THREE.Vector3(Math.cos(state.yaw), 0, Math.sin(state.yaw));
+      const motion = new THREE.Vector3();
+
+      if (state.keys.has("w") || state.keys.has("forward")) motion.add(forward);
+      if (state.keys.has("s") || state.keys.has("backward")) motion.sub(forward);
+      if (state.keys.has("d") || state.keys.has("right")) motion.add(right);
+      if (state.keys.has("a") || state.keys.has("left")) motion.sub(right);
+
+      if (motion.lengthSq() > 0) {
+        motion.normalize().multiplyScalar(speed * delta);
+        camera.position.add(motion);
+        camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.5, 10.5);
+        camera.position.z = THREE.MathUtils.clamp(camera.position.z, -10.5, 10.5);
+      }
+    }
+
+    function updateInteractions() {
+      let nearest = null;
+      let nearestDist = Infinity;
+      const player = camera.position;
+
+      for (const painting of state.paintings) {
+        if (painting.userData.delivered || state.carrying === painting) continue;
+        const dist = player.distanceTo(painting.position);
+        if (dist < nearestDist) {
+          nearest = painting;
+          nearestDist = dist;
+        }
+      }
+
+      state.nearest = nearestDist < 2.6 ? nearest : null;
+      state.nearTable = tableZone.containsPoint(player);
+
+      if (state.nearest) {
+        state.seen.add(state.nearest.userData.index);
+        showCompany(state.nearest.userData.company);
+      } else {
+        companyCard.classList.remove("visible");
+      }
+
+      if (state.carrying) {
+        const holdOffset = new THREE.Vector3(0, -0.18, -1.25).applyEuler(camera.rotation);
+        state.carrying.position.copy(camera.position).add(holdOffset);
+        state.carrying.rotation.set(camera.rotation.x * 0.3, camera.rotation.y, 0);
+      }
+
+      updateHud();
+    }
+
+    function showCompany(company) {
+      companyCard.innerHTML = `
+        <h2>${escapeHtml(company.name)}</h2>
+        <p>${escapeHtml(company.description)}</p>
+        <dl>
+          <dt>Website</dt><dd>${escapeHtml(company.website)}</dd>
+          <dt>Revenue</dt><dd>${escapeHtml(company.revenue)}</dd>
+          <dt>Employees</dt><dd>${escapeHtml(String(company.employees))}</dd>
+          <dt>Headquarters</dt><dd>${escapeHtml(company.headquarters)}</dd>
+          <dt>Net income</dt><dd>${escapeHtml(company.net_income)}</dd>
+          <dt>Share price</dt><dd>${escapeHtml(company.share_price)}</dd>
+        </dl>
+      `;
+      companyCard.classList.add("visible");
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function interact() {
+      if (quizOverlay.classList.contains("visible")) return;
+
+      if (state.carrying && state.nearTable) {
+        deliverCarried();
+        return;
+      }
+
+      if (!state.carrying && state.nearest) {
+        state.carrying = state.nearest;
+        state.carrying.userData.picked = true;
+        state.seen.add(state.carrying.userData.index);
+        return;
+      }
+
+      if (!state.carrying && state.delivered.size === state.paintings.length) {
+        startQuiz();
+      }
+    }
+
+    function deliverCarried() {
+      const painting = state.carrying;
+      const slot = state.delivered.size;
+      const cols = 3;
+      const x = -1.65 + (slot % cols) * 1.65;
+      const z = -0.7 + Math.floor(slot / cols) * 0.7;
+      painting.position.set(x, 1.16 + slot * 0.012, z);
+      painting.rotation.set(-Math.PI / 2, 0, 0);
+      painting.scale.setScalar(0.55);
+      painting.userData.delivered = true;
+      state.delivered.add(painting.userData.index);
+      state.carrying = null;
+
+      if (state.delivered.size === state.paintings.length) {
+        promptText.textContent = "All pictures are on the table. Press E to start the millionaire quiz.";
+      }
+    }
+
+    function updateHud() {
+      const picked = state.paintings.filter((painting) => painting.userData.picked).length;
+      pickedCount.textContent = `${picked}/${state.paintings.length}`;
+      deliveredCount.textContent = `${state.delivered.size}/${state.paintings.length}`;
+      quizCount.textContent = state.quizFinished ? "Won" : state.delivered.size === state.paintings.length ? "Ready" : "Locked";
+
+      if (state.carrying && state.nearTable) {
+        promptText.textContent = `Press E to place ${state.carrying.userData.company.name} on the table.`;
+      } else if (state.carrying) {
+        promptText.textContent = `Carrying ${state.carrying.userData.company.name}. Bring it to the table.`;
+      } else if (state.nearest) {
+        promptText.textContent = `Press E to pick up ${state.nearest.userData.company.name}.`;
+      } else if (state.delivered.size === state.paintings.length) {
+        promptText.textContent = "Press E to start the millionaire quiz.";
+      } else {
+        promptText.textContent = "Move with WASD, look with the mouse, approach a picture to inspect it.";
+      }
+    }
+
+    function makeQuizQuestions() {
+      const fields = ["headquarters", "revenue", "employees", "net_income", "share_price"];
+      const questions = [];
+
+      state.companies.forEach((company, companyIndex) => {
+        fields.forEach((field) => {
+          const answer = String(company[field]);
+          const distractors = state.companies
+            .filter((item, idx) => idx !== companyIndex && String(item[field]) !== answer)
+            .map((item) => String(item[field]));
+          if (distractors.length < 3) return;
+          questions.push({
+            question: `What is the ${FIELD_LABELS[field].toLowerCase()} of ${company.name}?`,
+            correct: answer,
+            options: shuffle([answer, ...shuffle(distractors).slice(0, 3)])
+          });
+        });
+      });
+
+      return shuffle(questions).slice(0, Math.min(15, questions.length));
+    }
+
+    function startQuiz() {
+      state.quizQuestions = makeQuizQuestions();
+      state.quizIndex = 0;
+      state.quizLocked = false;
+      quizOverlay.classList.add("visible");
+      drawPrizeList();
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (state.quizIndex >= state.quizQuestions.length) {
+        state.quizFinished = true;
+        questionText.textContent = "You collected every picture and answered every question correctly.";
+        answersEl.innerHTML = "";
+        quizMessage.textContent = "Final prize: 1,000,000 EUR";
+        drawPrizeList();
+        return;
+      }
+
+      const q = state.quizQuestions[state.quizIndex];
+      state.quizLocked = false;
+      questionText.textContent = q.question;
+      quizMessage.textContent = `Question ${state.quizIndex + 1} of ${state.quizQuestions.length}`;
+      answersEl.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "answer-btn";
+        btn.textContent = `${String.fromCharCode(65 + index)}: ${option}`;
+        btn.addEventListener("click", () => chooseAnswer(btn, option));
+        answersEl.appendChild(btn);
+      });
+
+      drawPrizeList();
+    }
+
+    function chooseAnswer(button, option) {
+      if (state.quizLocked) return;
+      state.quizLocked = true;
+      const q = state.quizQuestions[state.quizIndex];
+      const buttons = [...answersEl.querySelectorAll(".answer-btn")];
+      buttons.forEach((btn) => (btn.disabled = true));
+
+      const correct = option === q.correct;
+      buttons.forEach((btn) => {
+        if (btn.textContent.endsWith(q.correct)) btn.classList.add("correct");
+      });
+      if (!correct) button.classList.add("wrong");
+
+      if (correct) {
+        quizMessage.textContent = `Correct. Current prize: ${PRIZES[state.quizIndex]}`;
+        state.quizIndex += 1;
+        window.setTimeout(showQuestion, 1150);
+      } else {
+        const safePrize = state.quizIndex >= 10 ? PRIZES[9] : state.quizIndex >= 5 ? PRIZES[4] : "0 EUR";
+        quizMessage.textContent = `Wrong. Correct answer: ${q.correct}. Safe prize: ${safePrize}`;
+      }
+    }
+
+    function drawPrizeList() {
+      prizeList.innerHTML = "";
+      for (let i = PRIZES.length - 1; i >= 0; i--) {
+        const li = document.createElement("li");
+        if (i === state.quizIndex) li.classList.add("current");
+        li.innerHTML = `<span>${i + 1}</span><strong>${PRIZES[i]}</strong>`;
+        prizeList.appendChild(li);
+      }
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    async function loadCompanies() {
+      try {
+        const response = await fetch("js/companies.json");
+        if (!response.ok) throw new Error("Company data could not be loaded.");
+        return await response.json();
+      } catch (error) {
+        console.warn(error);
+        return FALLBACK_COMPANIES;
+      }
+    }
+
+    function bindInput() {
+      window.addEventListener("keydown", (event) => {
+        const key = event.key.toLowerCase();
+        if (["w", "a", "s", "d", "shift"].includes(key)) state.keys.add(key);
+        if (key === "e") interact();
+        if (key === "q" && state.carrying) {
+          state.carrying = null;
+        }
+      });
+
+      window.addEventListener("keyup", (event) => {
+        state.keys.delete(event.key.toLowerCase());
+      });
+
+      canvas.addEventListener("click", () => {
+        canvas.focus();
+        canvas.requestPointerLock?.();
+      });
+
+      window.addEventListener("mousemove", (event) => {
+        if (document.pointerLockElement !== canvas && event.buttons !== 1) return;
+        state.yaw -= event.movementX * 0.0024;
+        state.pitch -= event.movementY * 0.0024;
+        state.pitch = THREE.MathUtils.clamp(state.pitch, -0.72, 0.72);
+        updateCameraRotation();
+      });
+
+      document.querySelectorAll("[data-hold]").forEach((button) => {
+        const key = button.dataset.hold;
+        const start = () => state.keys.add(key);
+        const end = () => state.keys.delete(key);
+        button.addEventListener("pointerdown", start);
+        button.addEventListener("pointerup", end);
+        button.addEventListener("pointerleave", end);
+        button.addEventListener("pointercancel", end);
+      });
+
+      document.querySelector("[data-action='interact']").addEventListener("click", interact);
+      document.querySelector("[data-action='turnLeft']").addEventListener("click", () => {
+        state.yaw += 0.22;
+        updateCameraRotation();
+      });
+      document.querySelector("[data-action='turnRight']").addEventListener("click", () => {
+        state.yaw -= 0.22;
+        updateCameraRotation();
+      });
+
+      returnMuseumBtn.addEventListener("click", () => {
+        quizOverlay.classList.remove("visible");
+      });
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    function animate() {
+      const delta = Math.min(clock.getDelta(), 0.05);
+      movePlayer(delta);
+      updateInteractions();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    async function init() {
+      addRoom();
+      addLights();
+      state.companies = await loadCompanies();
+      addPaintings(state.companies);
+      bindInput();
+      updateCameraRotation();
+      updateHud();
+      animate();
+    }
+
+    init();
+  </script>
+</body>
+</html>
